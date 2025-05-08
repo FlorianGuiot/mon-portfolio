@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-background;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1{
+  @apply text-4xl md:text-5xl font-bold mb-4;
+}
+
+h2{
+  @apply text-3xl md:text-4xl font-semibold mb-4;
+}
+
+/*
+======================
+      Components
+======================
+*/
+.btn-primary {
+  @apply py-2 px-4 bg-primary text-text_light hover:text-text_dark  hover:bg-secondary rounded;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-secondary {
+  @apply py-2 px-4 bg-secondary text-text_dark  hover:bg-primary_dark hover:text-text_light rounded;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-border-light {
+  @apply py-2 px-4 border border-text_light  text-text_light  hover:bg-secondary hover:border-text_dark hover:text-text_dark rounded;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-border-dark {
+  @apply py-2 px-4 border border-text_dark  text-text_dark  hover:bg-secondary rounded;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.badge-secondary {
+  @apply py-1 px-2 bg-secondary text-text_dark rounded-xl;
+}
+
+
+/*
+======================
+      Navbar
+======================
+*/
+.navbar_link {
+  @apply  hover:text-accent;
+  transition: padding 0.3s ease;
+}
+
+.navbar_link:hover {
+  padding: 0.2em 1em; /* Augmenter le padding au survol */
+}
