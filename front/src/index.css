@@ -20,28 +20,33 @@ h2{
   @apply text-3xl md:text-4xl font-semibold mb-4;
 }
 
+h3{
+  @apply text-xl md:text-2xl font-semibold mb-4;
+}
+
+
 /*
 ======================
       Components
 ======================
 */
 .btn-primary {
-  @apply py-2 px-4 bg-primary text-text_light hover:text-text_dark  hover:bg-secondary rounded;
+  @apply py-2 px-4 bg-primary text-text_light hover:text-text_dark  hover:bg-secondary rounded cursor-pointer;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
 .btn-secondary {
-  @apply py-2 px-4 bg-secondary text-text_dark  hover:bg-primary_dark hover:text-text_light rounded;
+  @apply py-2 px-4 bg-secondary text-text_dark  hover:bg-primary_dark hover:text-text_light rounded cursor-pointer;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
 .btn-border-light {
-  @apply py-2 px-4 border border-text_light  text-text_light  hover:bg-secondary hover:border-text_dark hover:text-text_dark rounded;
+  @apply py-2 px-4 border border-text_light  text-text_light  hover:bg-secondary hover:border-text_dark hover:text-text_dark rounded cursor-pointer;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
 .btn-border-dark {
-  @apply py-2 px-4 border border-text_dark  text-text_dark  hover:bg-secondary rounded;
+  @apply py-2 px-4 border border-text_dark  text-text_dark  hover:bg-secondary rounded cursor-pointer;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
@@ -49,7 +54,30 @@ h2{
   @apply py-1 px-2 bg-secondary text-text_dark rounded-xl;
 }
 
+/*
+======================
+      Animations
+======================
+*/
+@keyframes gentleBounce {
+  0% { transform: translateY(0); }
+  30% { transform: translateY(-6px); }
+  60% { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
 
+.bounce-every-3s {
+  animation: gentleBounce 0.6s ease-in-out;
+  animation-delay: 0s;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+}
+
+.animate-pulse-delay {
+  animation: gentleBounce 0.6s ease-in-out;
+  animation-delay: 0s;
+  animation-fill-mode: both;
+}
 /*
 ======================
       Navbar
