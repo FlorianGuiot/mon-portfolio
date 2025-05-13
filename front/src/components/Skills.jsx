@@ -1,35 +1,47 @@
 import { useState, useEffect } from "react";
 import Modal from "./Modal";
 import { CodeBracketIcon, DevicePhoneMobileIcon, PaintBrushIcon, ServerStackIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-
+import { useFetch } from "../hooks/useFetch";
+import LoadedContent
+ from "./LoadedContent";
 export default function Skills() {
   const skillsData = [
     {
       title: "Développement web",
       icon: <CodeBracketIcon className="h-10 w-10 text-text_dark" />,
       descriptionComponent: <div>Contenu du développement mobile</div>,
+      url: "/test",
     },
     {
       title: "Développement mobile",
       icon: <DevicePhoneMobileIcon className="h-10 w-10 text-text_dark" />,
       descriptionComponent: <div>Contenu du développement mobile</div>,
+      url: "/test",
     },
     {
       title: "WebDesign",
       icon: <PaintBrushIcon className="h-10 w-10 text-text_dark" />,
       descriptionComponent: <div>Contenu du WebDesign</div>,
+      url: "/test",
     },
     {
       title: "Bases de données",
       icon: <ServerStackIcon className="h-10 w-10 text-text_dark" />,
       descriptionComponent: <div>Contenu sur les bases de données</div>,
+      url: "/test",
     },
   ];
+
+  // Contenu dynamique fetché pour chaque skill
+  const [loadedContent, setLoadedContent] = useState({});
 
   const [activeIndex, setActiveIndex] = useState(null);
   const [animateBounce, setAnimateBounce] = useState(false);
   const [hasClicked, setHasClicked] = useState(false); // Permet de savoir si l'utilisateur à cliqué sur au moins une carte
+  const { fetchData, loading, error } = useFetch();
+  const [loadErrors, setLoadErrors] = useState({});
 
+  //Gestion de l'animation rebond si aucun clic sur les cartes
   useEffect(() => {
     if (hasClicked) return; //Désactive l'animation si l'utilisateur à déjà cliqué sur une carte
     const interval = setInterval(() => {
@@ -39,6 +51,36 @@ export default function Skills() {
 
     return () => clearInterval(interval);
   }, [hasClicked]);
+
+  // Chargement du contenu distant pour la modale
+  // Se déclenche à chaque changement d'activeIndex
+  useEffect(() => {
+    if (activeIndex === null) return;
+
+    const currentSkill = skillsData[activeIndex];
+    const skillKey = currentSkill.title;
+
+    //Si la page a déjà été chargée, on annule
+    if (loadedContent[skillKey] || !currentSkill.url) return;
+
+    //Récupère la page
+    const loadContent = async () => {
+      const { success, data, error } = await fetchData(currentSkill.url);
+      if (success) {
+        setLoadedContent((prev) => ({
+          ...prev,
+          [skillKey]: data,
+        }));
+      } else {
+        setLoadErrors((prev) => ({
+          ...prev,
+          [skillKey]: true,
+        }));
+        console.error(error);
+      }
+    };
+    loadContent();
+  }, [activeIndex]);
 
   const showPrev = () => setActiveIndex((prev) => (prev > 0 ? prev - 1 : skillsData.length - 1));
   const showNext = () => setActiveIndex((prev) => (prev + 1) % skillsData.length);
@@ -50,7 +92,13 @@ export default function Skills() {
    */
   const handleCardClick = (index) => {
     setHasClicked(true);
-    setActiveIndex(index);
+    // Force une "fermeture" de la modale si on clique deux fois sur la même carte
+    if (activeIndex === index) {
+      setActiveIndex(null); // reset
+      setTimeout(() => setActiveIndex(index), 0); // réouvre
+    } else {
+      setActiveIndex(index);
+    }
   };
 
   return (
@@ -73,14 +121,22 @@ export default function Skills() {
       <Modal isOpen={activeIndex !== null} onClose={closeModal}>
         {activeIndex !== null && (
           <div>
+            {/* Boutons de navigation */}
             <div className="flex justify-between mt-6 mb-4">
-              <a onClick={showPrev} className="btn-secondary flex items-center mr-2"><ChevronLeftIcon className="h-6 w-6 pr-2" /><span className='text-nowrap'>Précédent</span></a>
+              <button onClick={showPrev} className="btn-secondary flex items-center mr-2"><ChevronLeftIcon className="h-6 w-6 pr-2" /><span className='text-nowrap'>Précédent</span></button>
               
               <h3>{skillsData[activeIndex].title}</h3>
 
-              <a onClick={showNext} className="btn-secondary flex items-center mr-2"><span className='text-nowrap'>Suivant</span><ChevronRightIcon className="h-6 w-6 pl-2" /></a>
+              <button onClick={showNext} className="btn-secondary flex items-center mr-2"><span className='text-nowrap'>Suivant</span><ChevronRightIcon className="h-6 w-6 pl-2" /></button>
             </div>
-            {skillsData[activeIndex].descriptionComponent}
+                  
+            {/* Affichage du contenu dynamique */}
+            <LoadedContent 
+            loading={loading}
+            error={error}
+            content={loadedContent[skillsData[activeIndex].title]} 
+            />
+
           </div>
         )}
       </Modal>
